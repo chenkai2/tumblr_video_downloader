@@ -1,0 +1,26 @@
+{
+	"name": {
+		"message": "Tumblr Video Downloader",
+		"description": "Extension name"
+	},
+	"description": {
+		"message": "add download menu to tumblr videos.",
+		"description": "Extension description"
+	},
+	"menu_download": {
+		"message": "Download Tumblr Video",
+		"description": "Menu item label."
+	},
+	"ok": {
+		"message": "OK",
+		"description": "OK"
+	},
+	"cancel": {
+		"message": "Cancel",
+		"description": "Cancel"
+	},
+	"error_no_video_detected": {
+		"message": "No video url detected.<br> Move your mouse on video player and try again.",
+		"description": "Error message, triggered when extension can't detect video url."
+	}
+}

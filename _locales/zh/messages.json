@@ -1,0 +1,26 @@
+{
+	"name": {
+		"message": "Tumblr视频下载",
+		"description": "扩展名"
+	},
+	"description": {
+		"message": "在右键菜单添加“下载Tumblr视频”菜单",
+		"description": "扩展描述"
+	},
+	"menu_download": {
+		"message": "下载Tumblr视频",
+		"description": "右键菜单标签名."
+	},
+	"ok": {
+		"message": "确定",
+		"description": "确定"
+	},
+	"cancel": {
+		"message": "取消",
+		"description": "取消"
+	},
+	"error_no_video_detected": {
+		"message": "小的没用，找不到视频地址 :(<br>您可以把鼠标移动到视频上，<br>然后再右键试试吗？",
+		"description": "错误信息，触发于扩展无法检测到视频地址之时。"
+	}
+}

@@ -1,0 +1,26 @@
+{
+	"name": {
+		"message": "Tumblr視頻下載",
+		"description": "擴充功能名稱"
+	},
+	"description": {
+		"message": "在右鍵菜單添加“下載Tumblr視頻”菜單",
+		"description": "擴充功能描述"
+	},
+	"menu_download": {
+		"message": "下載Tumblr視頻",
+		"description": "右鍵菜單標簽名"
+	},
+	"ok": {
+		"message": "確定",
+		"description": "確定"
+	},
+	"cancel": {
+		"message": "取消",
+		"description": "取消"
+	},
+	"error_no_video_detected": {
+		"message": "小的沒用，找不到視頻地址 :(<br>您可以把鼠標移動到視頻上，<br>然後再右鍵試試嗎？",
+		"description": "錯誤信息，觸發于擴充功能無法檢測到視頻地址之時。"
+	}
+}

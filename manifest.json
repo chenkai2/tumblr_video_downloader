@@ -1,0 +1,26 @@
+{
+	"name": "__MSG_name__",
+	"version": "0.1",
+	"manifest_version": 2,
+	"default_locale": "en",
+	"description": "__MSG_description__",
+	"icons": {
+		"128": "icon_128.png"
+	},
+	"permissions": [
+		"http://*.tumblr.com/",
+		"https://*.tumblr.com/",
+		"downloads",
+		"contextMenus"
+	],
+	"content_scripts": [{
+		"matches": ["http://*.tumblr.com/*", "https://*.tumblr.com/*"],
+		"run_at": "document_idle",
+		"js": ["tumblr.js"],
+		"css": ["tumblr.css"],
+		"all_frames": true
+	}],
+	"background": {
+		"scripts": ["menu.js"]
+	}
+}
