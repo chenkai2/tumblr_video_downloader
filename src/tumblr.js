@@ -49,7 +49,6 @@ var Tumblr = {
 		//console.log($e);
 		Tumblr.setLink('');
 		var $target = $e.target ? $e.target : $e.srcElement;
-		if ('vjs-big-play-button' != $target.className) return;
 		var $parent = $target.parentNode,
 			$siblings = $parent.childNodes,
 			$video = null;
@@ -62,9 +61,10 @@ var Tumblr = {
 			}
 		}
 		if (!$video) return;
-		var $src = $video.poster;
-		var $id = $src.replace(/^https?:\/\/.+\/tumblr_(.+)_[a-z0-9]+.jpg$/i, '$1').replace('/', '_');
-		var $realSrc = "https://vtt.tumblr.com/tumblr_" + $id + ".mp4#_=_";
+		var $src = $video.poster,
+			$longSrc = $video.src;
+		var $id = $src.replace(/^https?:\/\/.+\/tumblr_(.+)_[a-z0-9]+.jpg$/i, '$1');
+		var $realSrc = $id ? ("https://vtt.tumblr.com/tumblr_" + $id + ".mp4#_=_") : $longSrc;
 		console.log($realSrc);
 		Tumblr.setLink($realSrc);
 	}
