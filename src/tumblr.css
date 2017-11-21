@@ -90,6 +90,23 @@
     }
 }
 
+@font-face {
+    font-family: tumblr-icons;
+    font-style: normal;
+    font-weight: 400;
+    src: url("https://assets.tumblr.com/fonts/tumblr-icons/tumblr-icons_dcc03a80fac1495a3b7354ef27df77c8.eot?v=74b5b925ecefd47e9fc574c0f6990299#iefix") format("embedded-opentype"), url("https://assets.tumblr.com/fonts/tumblr-icons/tumblr-icons_dcc03a80fac1495a3b7354ef27df77c8.woff2?v=0fe5d21040cbeaa65ba05a288db26f9a") format("woff2"), url("https://assets.tumblr.com/fonts/tumblr-icons/tumblr-icons_dcc03a80fac1495a3b7354ef27df77c8.woff?v=001fc4d10ba4bc91c3e503a603f51bbb") format("woff"), url("https://assets.tumblr.com/fonts/tumblr-icons/tumblr-icons_dcc03a80fac1495a3b7354ef27df77c8.ttf?v=a746d4394cca455c36677ca92c1e6fc3") format("truetype"), url("https://assets.tumblr.com/fonts/tumblr-icons/tumblr-icons_dcc03a80fac1495a3b7354ef27df77c8.svg?v=9fab8e7811a16a260fcf8b3770762df8#tumblr-icons") format("svg")
+}
+
+[class*=" icon_"],
+[class^=icon_] {
+    line-height: 1
+}
+
+[class*=" icon_"]:before,
+[class^=icon_]:before {
+    display: inline-block;
+    line-height: 1
+}
 
 .chrome {
     cursor: pointer;
@@ -442,4 +459,62 @@ body {
 .ui_dialog .chrome.blue:active {
     background-color: #4f87b3;
     box-shadow: none
+}
+
+
+
+/**
+ * make my own download icon use tumblr resource
+ */
+.icon_download:before {
+    font-family: tumblr-icons, Blank;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: 400;
+    text-decoration: none;
+    text-transform: none
+}
+
+.icon_download:before {
+    content: "\EA39";
+    -moz-transform: scaleY(-1);
+    -webkit-transform: scaleY(-1);
+    -o-transform: scaleY(-1);
+    transform: scaleY(-1);
+    filter: flipv;
+}
+.icon_download {
+	margin-top: -2px;
+	margin-left: 10px;
+}
+.icon_download:hover {
+	color:#3a7eea;
+}
+/**
+ * move default controls left and insert download control on the right
+ */
+.crt-skin-default .vjs-download-control {
+    left: auto !important;
+    right: 10px !important;
+    cursor: pointer;
+}
+
+.crt-skin-default .vjs-fullscreen-control {
+    right: 70px !important;
+}
+
+.crt-skin-default .vjs-mute-control {
+    right: 40px !important;
+}
+
+.crt-skin-default .vjs-progress-control {
+    right: 170px !important;
+}
+
+.crt-skin-default .vjs-duration {
+    right: 120px !important;
 }

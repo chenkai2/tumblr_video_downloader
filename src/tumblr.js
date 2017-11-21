@@ -34,6 +34,11 @@ var Tumblr = {
 		}
 		document.body.appendChild($div);
 	},
+	observe: function($this) {
+		if ($this.className && $this.className.match('vjs-control-bar')) {
+			Tumblr.Injector($this);
+		}
+	},
 	onMessage: function($request, $sender, sendResponse) {
 		//receive message from background script
 		switch ($request.action) {
@@ -45,10 +50,7 @@ var Tumblr = {
 				break;
 		}
 	},
-	Detector: function($e) {
-		//console.log($e);
-		Tumblr.setLink('');
-		var $target = $e.target ? $e.target : $e.srcElement;
+	Analyse: function($target) {
 		var $parent = $target.parentNode,
 			$siblings = $parent.childNodes,
 			$video = null;
@@ -66,8 +68,55 @@ var Tumblr = {
 		var $id = $src.replace(/^https?:\/\/.+\/tumblr_(.+)_[a-z0-9]+.jpg$/i, '$1');
 		var $realSrc = $id ? ("https://vtt.tumblr.com/tumblr_" + $id + ".mp4#_=_") : $longSrc;
 		console.log($realSrc);
+		return $realSrc;
+	},
+	Detector: function($e) {
+		//console.log($e);
+		Tumblr.setLink('');
+		var $target = $e.target ? $e.target : $e.srcElement;
+		var $realSrc = Tumblr.Analyse($target);
 		Tumblr.setLink($realSrc);
+	},
+	Injector: function($bar) {
+		var $realSrc = Tumblr.Analyse($bar);
+		if (!$realSrc) return;
+		var $downloadControl = document.createElement('div');
+		$downloadControl.className = "vjs-download-control vjs-control vjs-button";
+		$downloadControl.title = "Download";
+		var $downloadIcon = document.createElement('div');
+		$downloadIcon.className = "icon_download";
+		$downloadIcon.onclick = function(ev) {
+			$downloadIcon.className = "icon_dotdotdot";
+			chrome.runtime.sendMessage({
+					"action": "addDownloadQueue",
+					"link": $realSrc
+				},
+				function(response) {
+					$downloadIcon.className = "icon_download";
+				}
+			);
+		};
+		$downloadControl.appendChild($downloadIcon);
+		$bar.appendChild($downloadControl);
+	},
+	onLoad: function() {
+		var $bars = document.getElementsByClassName('vjs-control-bar');
+		for (var $i = $bars.length - 1; $i >= 0; $i--) {
+			Tumblr.Injector($bars[$i]);
+		}
 	}
 }
+var observer = new MutationObserver(function(mutations) {
+	mutations.forEach(function(mutation) {
+		for (var i = 0; i < mutation.addedNodes.length; i++) {
+			Tumblr.observe(mutation.addedNodes[i]);
+		}
+	})
+});
 chrome.runtime.onMessage.addListener(Tumblr.onMessage);
 document.oncontextmenu = Tumblr.Detector;
+Tumblr.onLoad();
+observer.observe(document.body, {
+	childList: true,
+	subtree: true
+});

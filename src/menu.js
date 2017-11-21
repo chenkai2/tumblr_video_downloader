@@ -48,16 +48,19 @@ var Tumblr = {
 				Tumblr.alert(i18n('error_no_video_detected'));
 				return;
 			}
-			chrome.downloads.download({
-				url: $link,
-				'saveAs': true
-			}, function($id) {
-				var $ids = Tumblr.ls.get(DOWNLOADING_IDS, []);
-				if ($ids.indexOf($id) >= 0) return;
-				$ids.push($id);
-				Tumblr.ls.set(DOWNLOADING_IDS, $ids);
-			});
+			Tumblr.addDownloadQueue($link, true);
 		}
+	},
+	addDownloadQueue: function($link, $saveAs) {
+		chrome.downloads.download({
+			url: $link,
+			'saveAs': $saveAs
+		}, function($id) {
+			var $ids = Tumblr.ls.get(DOWNLOADING_IDS, []);
+			if ($ids.indexOf($id) >= 0) return;
+			$ids.push($id);
+			Tumblr.ls.set(DOWNLOADING_IDS, $ids);
+		});
 	},
 	onDownloadStateChange: function(delta) {
 		if (!delta.state) return;
@@ -103,6 +106,10 @@ var Tumblr = {
 		switch ($request.action) {
 			case 'setTumblrVideo':
 				Tumblr.ls.set(LINK, $request.link);
+				sendResponse(true);
+				break;
+			case 'addDownloadQueue':
+				Tumblr.addDownloadQueue($request.link);
 				sendResponse(true);
 				break;
 		}
