@@ -182,7 +182,6 @@ var Tumblr = {
 		if ($muteControl) {
 			$muteControl.addEventListener('mouseenter', function($ev) {
 				$sliderControl.className = $sliderControl.className.replace(/ hide\b/, '');
-				$video.volume = Tumblr.ls.get('volume', 0.4);
 			});
 			$muteControl.addEventListener('mouseleave', function($ev) {
 				$sliderControl.className = $sliderControl.className + ' hide';
@@ -194,6 +193,9 @@ var Tumblr = {
 			});
 		}
 		$bar.appendChild($sliderControl);
+		$bar.parentNode.addEventListener('mouseenter', function($ev) {
+			$video.volume = Tumblr.ls.get('volume', 0.4);
+		});
 	}
 }
 var observer = new MutationObserver(function(mutations) {
