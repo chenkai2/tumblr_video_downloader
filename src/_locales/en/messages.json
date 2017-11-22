@@ -1,10 +1,10 @@
 {
 	"name": {
-		"message": "Tumblr Video Downloader",
+		"message": "tumblr Video Downloader",
 		"description": "Extension name"
 	},
 	"description": {
-		"message": "add download button to video player; add download right-click menu to tumblr videos.",
+		"message": "+ download button to video player; + volume slider; + download right-click menu to tumblr videos.",
 		"description": "Extension description"
 	},
 	"menu_download": {

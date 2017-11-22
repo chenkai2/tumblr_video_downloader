@@ -1,10 +1,10 @@
 {
 	"name": {
-		"message": "Tumblr視頻下載",
+		"message": "tumblr視頻下载",
 		"description": "擴充功能名稱"
 	},
 	"description": {
-		"message": "給Tumblr默認視頻播放器增加下載按鈕；在右鍵菜單添加“下載Tumblr視頻”菜單",
+		"message": "給Tumblr視頻播放器增加下載按鈕、音量控制；在右鍵菜單添加“下載Tumblr視頻”菜單",
 		"description": "擴充功能描述"
 	},
 	"menu_download": {
