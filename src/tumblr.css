@@ -262,6 +262,10 @@ body {
     color: #444;
 }
 
+.hide {
+    display:none;
+}
+
 .buttons {
     text-align: center;
     margin-top: 22px;
