@@ -118,7 +118,7 @@ var Tumblr = {
 		var $downloadIcon = document.createElement('div');
 		$downloadIcon.className = "icon_download";
 		$downloadIcon.onclick = function(ev) {
-			$downloadIcon.className = "icon_dotdotdot";
+			//$downloadIcon.className = "icon_dotdotdot";
 			chrome.runtime.sendMessage({
 					"action": "addDownloadQueue",
 					"link": $realSrc
@@ -143,32 +143,54 @@ var Tumblr = {
 		$slider.type = "range";
 		$slider.min = 0;
 		$slider.max = 1;
-		$slider.step = 0.05;
+		$slider.step = 0.01;
 		$slider.style.zIndex = 10;
 		var $volume = Tumblr.ls.get('volume', 0.4);
 		$slider.volume = $volume;
 		$video.volume = $slider.volume;
-		$slider.addEventListener("input", function(ev) {
+		$slider.addEventListener("input", function($ev) {
 			$video.volume = $slider.value;
 			Tumblr.ls.set('volume', $slider.value);
 		});
-		$video.addEventListener('volumechange', function(ev) {
+		$video.addEventListener('volumechange', function($ev) {
 			$slider.value = $video.volume;
 			Tumblr.ls.set('volume', $slider.value);
 		});
-		$sliderControl.addEventListener('mouseover', function(ev) {
+		$sliderControl.addEventListener('mouseenter', function($ev) {
 			$sliderControl.className = $sliderControl.className.replace(/ hide\b/, '');
 		});
-		$sliderControl.addEventListener('mouseout', function(ev) {
+		$sliderControl.addEventListener('mouseleave', function($ev) {
 			$sliderControl.className = $sliderControl.className + ' hide';
+		});
+		var changeVolume = function($wheelDeltaY) {
+			$delta = $wheelDeltaY > 0 ? 0.01 : -0.01;
+			var $volume = $video.volume;
+			$volume = $volume + $delta;
+			if ($volume < 0) {
+				$volume = 0;
+			} else if ($volume > 1) {
+				$volume = 1;
+			}
+			$video.volume = $volume;
+		};
+		$sliderControl.addEventListener('wheel', function($ev) {
+			//console.log($ev);
+			$ev.preventDefault();
+			changeVolume($ev.wheelDeltaY);
 		});
 		$sliderControl.appendChild($slider);
 		if ($muteControl) {
-			$muteControl.addEventListener('mouseover', function(ev) {
+			$muteControl.addEventListener('mouseenter', function($ev) {
 				$sliderControl.className = $sliderControl.className.replace(/ hide\b/, '');
+				$video.volume = Tumblr.ls.get('volume', 0.4);
 			});
-			$muteControl.addEventListener('mouseout', function(ev) {
+			$muteControl.addEventListener('mouseleave', function($ev) {
 				$sliderControl.className = $sliderControl.className + ' hide';
+			});
+			$muteControl.addEventListener('wheel', function($ev) {
+				//console.log($ev);
+				$ev.preventDefault();
+				changeVolume($ev.wheelDeltaY);
 			});
 		}
 		$bar.appendChild($sliderControl);
