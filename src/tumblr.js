@@ -157,18 +157,18 @@ var Tumblr = {
 			Tumblr.ls.set('volume', $slider.value);
 		});
 		$sliderControl.addEventListener('mouseover', function(ev) {
-			$sliderControl.style.display = 'block';
+			$sliderControl.className = $sliderControl.className.replace(/ hide\b/, '');
 		});
 		$sliderControl.addEventListener('mouseout', function(ev) {
-			$sliderControl.style.display = 'none';
+			$sliderControl.className = $sliderControl.className + ' hide';
 		});
 		$sliderControl.appendChild($slider);
 		if ($muteControl) {
 			$muteControl.addEventListener('mouseover', function(ev) {
-				$sliderControl.style.display = 'block';
+				$sliderControl.className = $sliderControl.className.replace(/ hide\b/, '');
 			});
 			$muteControl.addEventListener('mouseout', function(ev) {
-				$sliderControl.style.display = 'none';
+				$sliderControl.className = $sliderControl.className + ' hide';
 			});
 		}
 		$bar.appendChild($sliderControl);
