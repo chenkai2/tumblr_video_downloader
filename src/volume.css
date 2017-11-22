@@ -76,17 +76,7 @@ input[type=range].vjs-volume-slider::-webkit-slider-thumb {
 input[type='range'].vjs-volume-slider::-webkit-slider-runnable-track {
     color: #FFFFFF;
     height: 2px;
-    margin-top: 3px;
-    -webkit-appearance: none;
-}
-
-input[type=range].vjs-volume-slider:hover::-webkit-slider-thumb {
-    margin-top: -4px;
-}
-
-input[type=range].vjs-volume-slider:hover::-webkit-slider-runnable-track {
-    background: #FFFFFF;
-    height: 1px;
     margin-top: 0px;
     -webkit-appearance: none;
+    border: 1px solid #FFF;
 }
