@@ -2,7 +2,7 @@
 	"manifest_version": 2,
 	"name": "__MSG_name__",
 	"short_name": "T-Video Downloader",
-	"version": "0.1.2",
+	"version": "0.1.3",
 	"default_locale": "en",
 	"description": "__MSG_description__",
 	"icons": {
@@ -20,7 +20,7 @@
 		"matches": ["http://*.tumblr.com/*", "https://*.tumblr.com/*"],
 		"run_at": "document_idle",
 		"js": ["tumblr.js"],
-		"css": ["tumblr.css"],
+		"css": ["tumblr.css","volume.css"],
 		"all_frames": true
 	}],
 	"background": {

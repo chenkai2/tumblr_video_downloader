@@ -1,4 +1,24 @@
 var Tumblr = {
+	ls: {
+		get: function($key, $default) {
+			if (typeof $default == "undefined") {
+				$default = '';
+			}
+			var $value = $default;
+			try {
+				$value = JSON.parse(localStorage[$key]);
+			} catch ($e) {
+				Tumblr.ls.set($key, $value);
+			}
+			return $value;
+		},
+		set: function($key, $value) {
+			localStorage[$key] = JSON.stringify($value);
+		},
+		remove: function($key) {
+			localStorage.removeItem($key);
+		}
+	},
 	setLink: function($srcLink) {
 		//send message to background script
 		chrome.runtime.sendMessage({
@@ -34,11 +54,6 @@ var Tumblr = {
 		}
 		document.body.appendChild($div);
 	},
-	observe: function($this) {
-		if ($this.className && $this.className.match('vjs-control-bar')) {
-			Tumblr.Injector($this);
-		}
-	},
 	onMessage: function($request, $sender, sendResponse) {
 		//receive message from background script
 		switch ($request.action) {
@@ -50,7 +65,20 @@ var Tumblr = {
 				break;
 		}
 	},
-	Analyse: function($target) {
+	onObserve: function($this) {
+		if ($this.className && $this.className.match('vjs-control-bar')) {
+			Tumblr.DownloadInjector($this);
+			Tumblr.VolumeInjector($this);
+		}
+	},
+	onLoad: function() {
+		var $bars = document.getElementsByClassName('vjs-control-bar');
+		for (var $i = $bars.length - 1; $i >= 0; $i--) {
+			Tumblr.DownloadInjector($bars[$i]);
+			Tumblr.VolumeInjector($bars[$i]);
+		}
+	},
+	getVideo: function($target) {
 		var $parent = $target.parentNode,
 			$siblings = $parent.childNodes,
 			$video = null;
@@ -62,12 +90,16 @@ var Tumblr = {
 				break;
 			}
 		}
+		return $video;
+	},
+	Analyse: function($target) {
+		var $video = Tumblr.getVideo($target);
 		if (!$video) return;
 		var $src = $video.poster,
 			$longSrc = $video.src;
 		var $id = $src.replace(/^https?:\/\/.+\/tumblr_(.+)_[a-z0-9]+.jpg$/i, '$1');
 		var $realSrc = $id ? ("https://vtt.tumblr.com/tumblr_" + $id + ".mp4#_=_") : $longSrc;
-		console.log($realSrc);
+		//console.log($realSrc);
 		return $realSrc;
 	},
 	Detector: function($e) {
@@ -77,7 +109,7 @@ var Tumblr = {
 		var $realSrc = Tumblr.Analyse($target);
 		Tumblr.setLink($realSrc);
 	},
-	Injector: function($bar) {
+	DownloadInjector: function($bar) {
 		var $realSrc = Tumblr.Analyse($bar);
 		if (!$realSrc) return;
 		var $downloadControl = document.createElement('div');
@@ -99,17 +131,53 @@ var Tumblr = {
 		$downloadControl.appendChild($downloadIcon);
 		$bar.appendChild($downloadControl);
 	},
-	onLoad: function() {
-		var $bars = document.getElementsByClassName('vjs-control-bar');
-		for (var $i = $bars.length - 1; $i >= 0; $i--) {
-			Tumblr.Injector($bars[$i]);
+	VolumeInjector: function($bar) {
+		var $video = Tumblr.getVideo($bar);
+		if (!$video) return;
+		var $muteControls = $bar.getElementsByClassName('vjs-mute-control'),
+			$muteControl = $muteControls.length > 0 ? $muteControls[0] : null;
+		var $sliderControl = document.createElement("div"),
+			$slider = document.createElement("input");
+		$sliderControl.className = "vjs-video-volume hide";
+		$slider.className = "vjs-volume-slider";
+		$slider.type = "range";
+		$slider.min = 0;
+		$slider.max = 1;
+		$slider.step = 0.05;
+		$slider.style.zIndex = 10;
+		var $volume = Tumblr.ls.get('volume', 0.4);
+		$slider.volume = $volume;
+		$video.volume = $slider.volume;
+		$slider.addEventListener("input", function(ev) {
+			$video.volume = $slider.value;
+			Tumblr.ls.set('volume', $slider.value);
+		});
+		$video.addEventListener('volumechange', function(ev) {
+			$slider.value = $video.volume;
+			Tumblr.ls.set('volume', $slider.value);
+		});
+		$sliderControl.addEventListener('mouseover', function(ev) {
+			$sliderControl.style.display = 'block';
+		});
+		$sliderControl.addEventListener('mouseout', function(ev) {
+			$sliderControl.style.display = 'none';
+		});
+		$sliderControl.appendChild($slider);
+		if ($muteControl) {
+			$muteControl.addEventListener('mouseover', function(ev) {
+				$sliderControl.style.display = 'block';
+			});
+			$muteControl.addEventListener('mouseout', function(ev) {
+				$sliderControl.style.display = 'none';
+			});
 		}
+		$bar.appendChild($sliderControl);
 	}
 }
 var observer = new MutationObserver(function(mutations) {
 	mutations.forEach(function(mutation) {
 		for (var i = 0; i < mutation.addedNodes.length; i++) {
-			Tumblr.observe(mutation.addedNodes[i]);
+			Tumblr.onObserve(mutation.addedNodes[i]);
 		}
 	})
 });
