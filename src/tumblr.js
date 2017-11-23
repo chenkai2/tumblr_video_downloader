@@ -117,7 +117,7 @@ var Tumblr = {
 		$downloadControl.title = "Download";
 		var $downloadIcon = document.createElement('div');
 		$downloadIcon.className = "icon_download";
-		$downloadIcon.onclick = function(ev) {
+		$downloadControl.onclick = function(ev) {
 			//$downloadIcon.className = "icon_dotdotdot";
 			chrome.runtime.sendMessage({
 					"action": "addDownloadQueue",
