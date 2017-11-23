@@ -1,9 +1,11 @@
 # tumblr video downloader / enhancer
 Chrome extension for tumblr, add right-click menu to download tumblr video in dashboard, profile, explore and so on.
 add download button to video player; add volume slider; preview supported; add right-click menu to download tumblr videos.
+Chrome Store: https://chrome.google.com/webstore/detail/mhnbncgedmceiijmnljpeenacdcaompa
 
 Chrome上的Tumblr视频下载扩展，提供右键菜单下载tumblr视频,支持dashboard、个人主页、发现页等各种页面。
 给视频增加下载按钮、音量控制，支持视频预览，在右键菜单添加“下载Tumblr视频”菜单。
+Chrome应用商店：https://chrome.google.com/webstore/detail/mhnbncgedmceiijmnljpeenacdcaompa
 
 ## Features:
     1. Right-click to download Tumblr video you wish to.
