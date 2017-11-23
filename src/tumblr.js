@@ -138,9 +138,10 @@ var Tumblr = {
 			$muteControl = $muteControls.length > 0 ? $muteControls[0] : null;
 		var $sliderControl = document.createElement("div"),
 			$slider = document.createElement("input");
-		$sliderControl.className = "vjs-video-volume hide";
+		$sliderControl.className = "vjs-video-volume invisible";
 		$slider.className = "vjs-volume-slider";
 		$slider.type = "range";
+		$slider.title = "Wheel Scroll to control";
 		$slider.min = 0;
 		$slider.max = 1;
 		$slider.step = 0.01;
@@ -156,13 +157,12 @@ var Tumblr = {
 			$slider.value = $video.volume;
 			Tumblr.ls.set('volume', $slider.value);
 		});
-		$sliderControl.addEventListener('mouseenter', function($ev) {
-			$sliderControl.className = $sliderControl.className.replace(/ hide\b/, '');
-		});
-		$sliderControl.addEventListener('mouseleave', function($ev) {
-			$sliderControl.className = $sliderControl.className + ' hide';
-		});
-		var changeVolume = function($wheelDeltaY) {
+		var $toggle = function($ev) {
+			$sliderControl.classList.toggle('invisible');
+		}
+		$sliderControl.addEventListener('mouseenter', $toggle);
+		$sliderControl.addEventListener('mouseleave', $toggle);
+		var $changeVolume = function($wheelDeltaY) {
 			$delta = $wheelDeltaY > 0 ? 0.01 : -0.01;
 			var $volume = $video.volume;
 			if ($volume > 0.2) $delta *= 5;
@@ -177,20 +177,16 @@ var Tumblr = {
 		$sliderControl.addEventListener('wheel', function($ev) {
 			//console.log($ev);
 			$ev.preventDefault();
-			changeVolume($ev.wheelDeltaY);
+			$changeVolume($ev.wheelDeltaY);
 		});
 		$sliderControl.appendChild($slider);
 		if ($muteControl) {
-			$muteControl.addEventListener('mouseenter', function($ev) {
-				$sliderControl.className = $sliderControl.className.replace(/ hide\b/, '');
-			});
-			$muteControl.addEventListener('mouseleave', function($ev) {
-				$sliderControl.className = $sliderControl.className + ' hide';
-			});
+			$muteControl.addEventListener('mouseenter', $toggle);
+			$muteControl.addEventListener('mouseleave', $toggle);
 			$muteControl.addEventListener('wheel', function($ev) {
 				//console.log($ev);
 				$ev.preventDefault();
-				changeVolume($ev.wheelDeltaY);
+				$changeVolume($ev.wheelDeltaY);
 			});
 		}
 		$bar.appendChild($sliderControl);

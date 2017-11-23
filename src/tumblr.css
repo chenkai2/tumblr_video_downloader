@@ -263,7 +263,11 @@ body {
 }
 
 .hide {
-    display:none;
+    display: none;
+}
+
+.invisible {
+    visibility: hidden !important;
 }
 
 .buttons {
@@ -467,9 +471,11 @@ body {
 
 
 
+
 /**
  * make my own download icon use tumblr resource
  */
+
 .icon_download:before {
     font-family: tumblr-icons, Blank;
     -webkit-font-smoothing: antialiased;
@@ -491,16 +497,21 @@ body {
     transform: scaleY(-1);
     filter: flipv;
 }
+
 .icon_download {
-	margin-top: -2px;
-	margin-left: 10px;
+    margin-top: -2px;
+    margin-left: 10px;
 }
+
 .icon_download:hover {
-	color:#3a7eea;
+    color: #3a7eea;
 }
+
+
 /**
  * move default controls left and insert download control on the right
  */
+
 .crt-skin-default .vjs-download-control {
     left: auto !important;
     right: 10px !important;
