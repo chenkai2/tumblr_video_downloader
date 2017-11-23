@@ -5,6 +5,9 @@ add download button to video player; add volume slider; preview supported; add r
 Chrome上的Tumblr视频下载扩展，提供右键菜单下载tumblr视频,支持dashboard、个人主页、发现页等各种页面。
 给视频增加下载按钮、音量控制，支持视频预览，在右键菜单添加“下载Tumblr视频”菜单。
 
+## Chrome Store (Chrome应用商店)
+https://chrome.google.com/webstore/detail/mhnbncgedmceiijmnljpeenacdcaompa
+
 ## Features:
     1. Right-click to download Tumblr video you wish to.
     2. Auto retry when it interrupted due to terrible network condition.
