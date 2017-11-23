@@ -165,6 +165,7 @@ var Tumblr = {
 		var changeVolume = function($wheelDeltaY) {
 			$delta = $wheelDeltaY > 0 ? 0.01 : -0.01;
 			var $volume = $video.volume;
+			if ($volume > 0.2) $delta *= 5;
 			$volume = $volume + $delta;
 			if ($volume < 0) {
 				$volume = 0;
