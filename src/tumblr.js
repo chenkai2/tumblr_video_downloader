@@ -1,3 +1,10 @@
+/**
+ * action script
+ * @authors orochi114 (orochi114@126.com)
+ * @date    2017-11-28 02:35:05
+ * @version $Id$
+ */
+
 var Tumblr = {
 	ls: {
 		get: function($key, $default) {
