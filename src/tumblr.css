@@ -476,7 +476,7 @@ body {
  * make my own download icon use tumblr resource
  */
 
-.icon_download:before {
+.icon_download:before,.icon_checkmark:before,.icon_close:before {
     font-family: tumblr-icons, Blank;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -487,6 +487,14 @@ body {
     font-weight: 400;
     text-decoration: none;
     text-transform: none
+}
+
+.icon_checkmark:before {
+    content: "\EA1D"
+}
+
+.icon_close:before {
+    content: "\EA1E"
 }
 
 .icon_download:before {
