@@ -1,3 +1,10 @@
+/**
+ * background service
+ * @authors orochi114 (orochi114@126.com)
+ * @date    2017-11-28 02:35:05
+ * @version $Id$
+ */
+
 var MENU_ID = 'tumblr downloader',
 	LINK = 'link',
 	DOWNLOADING_IDS = 'downloading_ids',
