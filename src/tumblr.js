@@ -55,10 +55,10 @@ var Tumblr = {
 		$div.innerHTML = $template.replace('${OK}', chrome.i18n.getMessage('OK')).replace('${msg}', $msg);
 		var $buttons = $div.getElementsByTagName('button'),
 			$button = $buttons[0];
-		$button.onclick = function() {
+		$button.addEventListener('click', function() {
 			$div.remove();
 			mask(false);
-		}
+		});
 		document.body.appendChild($div);
 	},
 	onMessage: function($request, $sender, sendResponse) {
@@ -124,7 +124,7 @@ var Tumblr = {
 		$downloadControl.title = "Download";
 		var $downloadIcon = document.createElement('div');
 		$downloadIcon.className = "icon_download";
-		$downloadIcon.onclick = function(ev) {
+		$downloadIcon.addEventListener('click', function(ev) {
 			//$downloadIcon.className = "icon_dotdotdot";
 			chrome.runtime.sendMessage({
 					"action": "addDownloadQueue",
@@ -134,7 +134,7 @@ var Tumblr = {
 					$downloadIcon.className = "icon_download";
 				}
 			);
-		};
+		});
 		$downloadControl.appendChild($downloadIcon);
 		$bar.appendChild($downloadControl);
 	},
@@ -210,7 +210,7 @@ var observer = new MutationObserver(function(mutations) {
 	})
 });
 chrome.runtime.onMessage.addListener(Tumblr.onMessage);
-document.oncontextmenu = Tumblr.Detector;
+document.addEventListener('contextmenu', Tumblr.Detector);
 Tumblr.onLoad();
 observer.observe(document.body, {
 	childList: true,

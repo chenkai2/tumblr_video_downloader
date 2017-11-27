@@ -7,9 +7,9 @@
 
 var $saveAs = document.getElementById('save_as'),
 	$globalVolume = document.getElementById('global_volume');
-$saveAs.onclick = function() {
+$saveAs.addEventListener('click', function() {
 	$saveAs.classList.toggle('active');
-}
-$globalVolume.onclick = function() {
+});
+$globalVolume.addEventListener('click', function() {
 	$globalVolume.classList.toggle('active');
-}
+});
