@@ -1,10 +1,10 @@
 {
 	"manifest_version": 2,
-	"name": "__MSG_name__",
+	"name": "__MSG_manifest_name__",
 	"short_name": "tumblr video player",
-	"version": "0.1.5",
+	"version": "0.2.0",
 	"default_locale": "en",
-	"description": "__MSG_description__",
+	"description": "__MSG_manifest_description__",
 	"icons": {
 		"128": "icon_128.png"
 	},
@@ -20,16 +20,16 @@
 	"content_scripts": [{
 		"matches": ["http://*.tumblr.com/*", "https://*.tumblr.com/*"],
 		"run_at": "document_idle",
-		"js": ["tumblr.js"],
+		"js": ["storage.js", "tumblr.js"],
 		"css": ["tumblr.css", "volume.css"],
 		"all_frames": true
 	}],
 	"background": {
-		"scripts": ["menu.js"]
+		"scripts": ["storage.js", "menu.js"]
 	},
 	"browser_action": {
 		"browser_style": false,
 		"default_popup": "options.html",
-		"default_title": "tumblr video player options"
+		"default_title": "__MSG_manifest_browser_action__"
 	}
 }

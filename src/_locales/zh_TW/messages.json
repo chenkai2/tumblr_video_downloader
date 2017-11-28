@@ -1,15 +1,39 @@
 {
-	"name": {
+	"manifest_name": {
 		"message": "tumblr視頻下载及增强",
 		"description": "擴充功能名稱"
 	},
-	"description": {
-		"message": "給視頻增加下載按鈕、音量控制，支持視頻預覽；在右鍵菜單添加“下載Tumblr視頻”菜單",
+	"manifest_description": {
+		"message": "給視頻增加下載按鈕、音量控制，支持視頻預覽；在右鍵菜單添加“下載Tumblr視頻”菜單. v0.2.0: 增加設置",
 		"description": "擴充功能描述"
+	},
+	"manifest_browser_action": {
+		"message": "tumblr視頻播放設置",
+		"description": "browser action title"
 	},
 	"menu_download": {
 		"message": "下載Tumblr視頻",
 		"description": "右鍵菜單標簽名"
+	},
+	"options_setting": {
+		"message": " 設置 ",
+		"description": "Options: Setting label."
+	},
+	"options_save_as_title": {
+		"message": "下載時打開另存爲對話框",
+		"description": "Options: Save As Option Title."
+	},
+	"options_save_as_label": {
+		"message": "打開另存爲對話框",
+		"description": "Options: Save As Option Label."
+	},
+	"options_global_volume_title": {
+		"message": "全局音量控制/各視頻控制各自的音量",
+		"description": "Options: Global Volume Option Title."
+	},
+	"options_global_volume_label": {
+		"message": "全局音量控制",
+		"description": "Options: Global Volume Option Label."
 	},
 	"ok": {
 		"message": "確定",

@@ -6,25 +6,9 @@
  */
 
 var Tumblr = {
-	ls: {
-		get: function($key, $default) {
-			if (typeof $default == "undefined") {
-				$default = '';
-			}
-			var $value = $default;
-			try {
-				$value = JSON.parse(localStorage[$key]);
-			} catch ($e) {
-				Tumblr.ls.set($key, $value);
-			}
-			return $value;
-		},
-		set: function($key, $value) {
-			localStorage[$key] = JSON.stringify($value);
-		},
-		remove: function($key) {
-			localStorage.removeItem($key);
-		}
+	options: {
+		saveAs: true,
+		globalVolume: true
 	},
 	setLink: function($srcLink) {
 		//send message to background script
@@ -61,6 +45,13 @@ var Tumblr = {
 		});
 		document.body.appendChild($div);
 	},
+	onOptionsChanged: function($changes, $namespace) {
+		for (var $i in $changes) {
+			var $change = $changes[$i];
+			Tumblr.options[$i] = $change.newValue;
+		}
+		//console.log(Tumblr.options, $namespace);
+	},
 	onMessage: function($request, $sender, sendResponse) {
 		//receive message from background script
 		switch ($request.action) {
@@ -79,11 +70,20 @@ var Tumblr = {
 		}
 	},
 	onLoad: function() {
-		var $bars = document.getElementsByClassName('vjs-control-bar');
-		for (var $i = $bars.length - 1; $i >= 0; $i--) {
-			Tumblr.DownloadInjector($bars[$i]);
-			Tumblr.VolumeInjector($bars[$i]);
-		}
+		//read options first
+		options.get({
+			'saveAs': Tumblr.options.saveAs,
+			'globalVolume': Tumblr.options.globalVolume
+		}, function($options) {
+			Tumblr.options = $options;
+			//console.log(Tumblr.options);
+			//injector
+			var $bars = document.getElementsByClassName('vjs-control-bar');
+			for (var $i = $bars.length - 1; $i >= 0; $i--) {
+				Tumblr.DownloadInjector($bars[$i]);
+				Tumblr.VolumeInjector($bars[$i]);
+			};
+		});
 	},
 	getVideo: function($target) {
 		var $parent = $target.parentNode,
@@ -153,16 +153,18 @@ var Tumblr = {
 		$slider.max = 1;
 		$slider.step = 0.01;
 		$slider.style.zIndex = 10;
-		var $volume = Tumblr.ls.get('volume', 0.4);
-		$slider.volume = $volume;
-		$video.volume = $slider.volume;
+		var $volume = ls.get('volume', 0.4);
+		if (Tumblr.options.globalVolume) {
+			$video.volume = $volume;
+		}
+		$slider.volume = $video.volume;
 		$slider.addEventListener("input", function($ev) {
 			$video.volume = $slider.value;
-			Tumblr.ls.set('volume', $slider.value);
+			ls.set('volume', $slider.value);
 		});
 		$video.addEventListener('volumechange', function($ev) {
 			$slider.value = $video.volume;
-			Tumblr.ls.set('volume', $slider.value);
+			ls.set('volume', $slider.value);
 		});
 		var $toggle = function($ev) {
 			$sliderControl.classList.toggle('invisible');
@@ -198,7 +200,9 @@ var Tumblr = {
 		}
 		$bar.appendChild($sliderControl);
 		$bar.parentNode.addEventListener('mouseenter', function($ev) {
-			$video.volume = Tumblr.ls.get('volume', 0.4);
+			if (Tumblr.options.globalVolume) {
+				$video.volume = ls.get('volume', 0.4);
+			}
 		});
 	}
 }
@@ -210,6 +214,7 @@ var observer = new MutationObserver(function(mutations) {
 	})
 });
 chrome.runtime.onMessage.addListener(Tumblr.onMessage);
+chrome.storage.onChanged.addListener(Tumblr.onOptionsChanged);
 document.addEventListener('contextmenu', Tumblr.Detector);
 Tumblr.onLoad();
 observer.observe(document.body, {

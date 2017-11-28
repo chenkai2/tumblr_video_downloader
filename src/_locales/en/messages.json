@@ -1,15 +1,39 @@
 {
-	"name": {
+	"manifest_name": {
 		"message": "tumblr video downloader and enhancer",
 		"description": "Extension name"
 	},
-	"description": {
-		"message": "+ download button to video player; + volume slider; preview supported; + right-click menu to download tumblr videos.",
+	"manifest_description": {
+		"message": "+ download button to video player; + volume slider; preview supported; + right-click menu to download tumblr videos. v0.2.0: +options",
 		"description": "Extension description"
+	},
+	"manifest_browser_action": {
+		"message": "tumblr video player options",
+		"description": "browser action title"
 	},
 	"menu_download": {
 		"message": "Download Tumblr Video",
 		"description": "Menu item label."
+	},
+	"options_setting": {
+		"message": " Setting ",
+		"description": "Options: Setting label."
+	},
+	"options_save_as_title": {
+		"message": "Open Save As dialogue while downloading",
+		"description": "Options: Save As Option Title."
+	},
+	"options_save_as_label": {
+		"message": "Open Save As dialogue",
+		"description": "Options: Save As Option Label."
+	},
+	"options_global_volume_title": {
+		"message": "Slider controls all videos / slider only take effect on current video",
+		"description": "Options: Global Volume Option Title."
+	},
+	"options_global_volume_label": {
+		"message": "Global Volume Control",
+		"description": "Options: Global Volume Option Label."
 	},
 	"ok": {
 		"message": "OK",

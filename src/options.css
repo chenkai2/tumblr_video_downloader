@@ -1,48 +1,7 @@
 body {
 	min-width: 10em;
-	min-height: 10em;
+	min-height: 8em;
 	width: 240px;
-}
-
-
-#popover_yvp a.external:after,
-.info_popover .popover_inner ul li.toggle-subscription .help-slidedown:before {
-    font-family: tumblr-icons, Blank;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    font-smoothing: antialiased;
-    text-rendering: optimizeLegibility;
-    font-style: normal;
-    font-variant: normal;
-    font-weight: 400;
-    text-decoration: none;
-    text-transform: none
-}
-
-.popover--base {
-    z-index: 80;
-    position: absolute
-}
-
-.popover--base ol,
-.popover--base ul {
-    list-style-type: none
-}
-
-.popover--base-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    transition: opacity .25s ease-in-out;
-    background: #36465d;
-    opacity: 0;
-    z-index: 90
-}
-
-.popover--base-overlay.active {
-    opacity: .95
 }
 
 .popover_button {

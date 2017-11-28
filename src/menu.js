@@ -13,6 +13,10 @@ var MENU_ID = 'tumblr downloader',
 		return chrome.i18n.getMessage($var, $options);
 	};
 var Tumblr = {
+	options: {
+		saveAs: true,
+		globalVolume: true
+	},
 	onInstalled: function() {
 		// When the app gets installed, set up the context menus
 		var $menuCreated = chrome.contextMenus.create({
@@ -28,57 +32,42 @@ var Tumblr = {
 			]
 		});
 	},
-	ls: {
-		get: function($key, $default) {
-			if (typeof $default == "undefined") {
-				$default = '';
-			}
-			var $value = $default;
-			try {
-				$value = JSON.parse(localStorage[$key]);
-			} catch ($e) {
-				Tumblr.ls.set($key, $value);
-			}
-			return $value;
-		},
-		set: function($key, $value) {
-			localStorage[$key] = JSON.stringify($value);
-		},
-		remove: function($key) {
-			localStorage.removeItem($key);
-		}
+	onLoad: function() {
+		options.get({
+			'saveAs': Tumblr.options.saveAs,
+			'globalVolume': Tumblr.options.globalVolume
+		}, function($options) {
+			Tumblr.options = $options;
+			console.log(Tumblr.options);
+		});
 	},
 	onClicked: function($itemData) {
 		if ($itemData.menuItemId == MENU_ID) {
-			var $link = Tumblr.ls.get(LINK);
+			var $link = ls.get(LINK);
 			if (!$link) {
 				Tumblr.alert(i18n('error_no_video_detected'));
 				return;
 			}
-			Tumblr.addDownloadQueue($link, true);
+			Tumblr.addDownloadQueue($link, Tumblr.options.saveAs);
 		}
 	},
-	addDownloadQueue: function($link, $saveAs) {
-		chrome.downloads.download({
-			url: $link,
-			'saveAs': $saveAs
-		}, function($id) {
-			var $ids = Tumblr.ls.get(DOWNLOADING_IDS, []);
-			if ($ids.indexOf($id) >= 0) return;
-			$ids.push($id);
-			Tumblr.ls.set(DOWNLOADING_IDS, $ids);
-		});
+	onOptionsChanged: function($changes, $namespace) {
+		for (var $i in $changes) {
+			var $change = $changes[$i];
+			Tumblr.options[$i] = $change.newValue;
+		}
+		//console.log(Tumblr.options, $namespace);
 	},
 	onDownloadStateChange: function(delta) {
 		if (!delta.state) return;
-		var $ids = Tumblr.ls.get(DOWNLOADING_IDS, []);
+		var $ids = ls.get(DOWNLOADING_IDS, []);
 		var $idx = $ids.indexOf(delta.id);
 		switch (delta.state.current) {
 			case 'complete':
 				if ($idx >= 0) {
 					$ids.splice($idx, 1);
-					Tumblr.ls.set(DOWNLOADING_IDS, $ids);
-					Tumblr.ls.remove(DOWNLOADING_RETRY + delta.id);
+					ls.set(DOWNLOADING_IDS, $ids);
+					ls.remove(DOWNLOADING_RETRY + delta.id);
 				}
 				break;
 			case 'interrupted':
@@ -86,19 +75,19 @@ var Tumblr = {
 					var $key = DOWNLOADING_RETRY + delta.id;
 					if (delta.canResume) {
 						//can resume, retry
-						var $retry = Tumblr.ls.get($key, 0);
+						var $retry = ls.get($key, 0);
 						if ($retry < 10) {
 							chrome.downloads.resume(delta.id, function() {
 								console.log(delta.id + ':retry time: ' + $retry);
 							});
 							$retry++;
-							Tumblr.ls.set($key, $retry);
+							ls.set($key, $retry);
 						};
 					} else {
 						//can't resume(e.g. manually abort), clear stage.
 						$ids.splice($idx, 1);
-						Tumblr.ls.set(DOWNLOADING_IDS, $ids);
-						Tumblr.ls.remove($key);
+						ls.set(DOWNLOADING_IDS, $ids);
+						ls.remove($key);
 					}
 
 				}
@@ -112,14 +101,25 @@ var Tumblr = {
 	onMessage: function($request, $sender, sendResponse) {
 		switch ($request.action) {
 			case 'setTumblrVideo':
-				Tumblr.ls.set(LINK, $request.link);
+				ls.set(LINK, $request.link);
 				sendResponse(true);
 				break;
 			case 'addDownloadQueue':
-				Tumblr.addDownloadQueue($request.link);
+				Tumblr.addDownloadQueue($request.link, Tumblr.options.saveAs);
 				sendResponse(true);
 				break;
 		}
+	},
+	addDownloadQueue: function($link, $saveAs) {
+		chrome.downloads.download({
+			url: $link,
+			'saveAs': $saveAs
+		}, function($id) {
+			var $ids = ls.get(DOWNLOADING_IDS, []);
+			if ($ids.indexOf($id) >= 0) return;
+			$ids.push($id);
+			ls.set(DOWNLOADING_IDS, $ids);
+		});
 	},
 	sendMessage: function($msg) {
 		chrome.tabs.query({
@@ -143,7 +143,9 @@ var Tumblr = {
 	}
 };
 
+Tumblr.onLoad();
 chrome.runtime.onInstalled.addListener(Tumblr.onInstalled);
+chrome.storage.onChanged.addListener(Tumblr.onOptionsChanged);
 chrome.contextMenus.onClicked.addListener(Tumblr.onClicked);
 chrome.extension.onMessage.addListener(Tumblr.onMessage);
 chrome.downloads.onChanged.addListener(Tumblr.onDownloadStateChange);
