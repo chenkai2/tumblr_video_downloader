@@ -131,7 +131,7 @@ var Tumblr = {
 					"link": $realSrc
 				},
 				function(response) {
-					$downloadIcon.className = "icon_download";
+					//$downloadIcon.className = "icon_download";
 				}
 			);
 		});
@@ -180,6 +180,9 @@ var Tumblr = {
 				$volume = 0;
 			} else if ($volume > 1) {
 				$volume = 1;
+			}
+			if ($video.muted) {
+				$video.muted = false;
 			}
 			$video.volume = $volume;
 		};
