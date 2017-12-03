@@ -29,3 +29,26 @@ https://chrome.google.com/webstore/detail/mhnbncgedmceiijmnljpeenacdcaompa
     7. 在*.tumblr.com域名下生效，可以是dashboard、个人页、发现页，任君选择。
     8. 只支持Tumblr原生视频，不支持instagram、youtube、vimeo。
     9. 和其他会修改默认播放器的扩展不兼容，比如“Better Tumblr Video”。
+
+## v 0.2.2
++ progress bar scrolling control.
++ Mozilla Firefox extension compatible, rewrite resume downloading algorithm (unfortunately FF doesn't support resume downloading after network restored)
+
+## v 0.2.1
++ unmute while scrolling
+
+## v 0.2.0
++ options to control saveAs and globalVolume
++elegantly toggle volume control
+
+## v 0.1.4
+volume control: delta step added to 0.05 when volume > 2
+
+## v 0.1.3
++ video volume slider
+
+## v 0.1.2
++ download button to tumblr video player
+
+## v 0.1.1
++ right-click menu to download tumblr video

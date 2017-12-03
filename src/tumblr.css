@@ -469,9 +469,6 @@ body {
     box-shadow: none
 }
 
-
-
-
 /**
  * make my own download icon use tumblr resource
  */
@@ -512,9 +509,8 @@ body {
 }
 
 .icon_download:hover {
-    color: #36465d;
+    color: #f22e2e;
 }
-
 
 /**
  * move default controls left and insert download control on the right

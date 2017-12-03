@@ -9,6 +9,7 @@ var MENU_ID = 'tumblr downloader',
 	LINK = 'link',
 	DOWNLOADING_IDS = 'downloading_ids',
 	DOWNLOADING_RETRY = 'downloading_retry_',
+	DOWNLOADING_RETRY_TIMES = 10,
 	i18n = function($var, $options) {
 		return chrome.i18n.getMessage($var, $options);
 	};
@@ -22,13 +23,9 @@ var Tumblr = {
 		var $menuCreated = chrome.contextMenus.create({
 			id: MENU_ID,
 			title: i18n("menu_download"),
-			documentUrlPatterns: ["http://*.tumblr.com/*", "https://*.tumblr.com/*"],
+			documentUrlPatterns: ["*://*.tumblr.com/*"],
 			contexts: [
-				"page",
-				"link",
-				"image",
-				"video",
-				"audio"
+				"all"
 			]
 		});
 	},
@@ -37,9 +34,23 @@ var Tumblr = {
 			'saveAs': Tumblr.options.saveAs,
 			'globalVolume': Tumblr.options.globalVolume
 		}, function($options) {
-			Tumblr.options = $options;
-			console.log(Tumblr.options);
+			for (var $i in $options) {
+				Tumblr.options[$i] = $options[$i];
+			}
+			//console.log('onload', Tumblr.options);
 		});
+	},
+	onMessage: function($request, $sender, $sendResponse) {
+		switch ($request.action) {
+			case 'setTumblrVideo':
+				ls.set(LINK, $request.link);
+				$sendResponse(true);
+				break;
+			case 'addDownloadQueue':
+				Tumblr.addDownloadQueue($request.link, Tumblr.options.saveAs);
+				$sendResponse(true);
+				break;
+		}
 	},
 	onClicked: function($itemData) {
 		if ($itemData.menuItemId == MENU_ID) {
@@ -58,56 +69,40 @@ var Tumblr = {
 		}
 		//console.log(Tumblr.options, $namespace);
 	},
-	onDownloadStateChange: function(delta) {
-		if (!delta.state) return;
-		var $ids = ls.get(DOWNLOADING_IDS, []);
-		var $idx = $ids.indexOf(delta.id);
-		switch (delta.state.current) {
+	onDownloadStateChange: function($delta, $error) {
+		console.log(`onchange`, $delta);
+		if (!Tumblr.inDownloadQueue($delta.id)) return;
+		if ($delta.error && $delta.error.current) {
+			if ($delta.error.current.match(/^NETWORK_/)) {
+				console.log('network error');
+				Tumblr.retryDownload($delta.id);
+				return;
+			} else if ($delta.error.current.match(/^USER_/)) {
+				//user cancel, user shutdown
+				console.log('user abort');
+				Tumblr.removeDownloadQueue($delta.id);
+				return;
+			}
+		}
+		if (!$delta.state) return;
+		switch ($delta.state.current) {
 			case 'complete':
-				if ($idx >= 0) {
-					$ids.splice($idx, 1);
-					ls.set(DOWNLOADING_IDS, $ids);
-					ls.remove(DOWNLOADING_RETRY + delta.id);
-				}
+				Tumblr.removeDownloadQueue($delta.id);
 				break;
 			case 'interrupted':
-				if ($idx >= 0) {
-					var $key = DOWNLOADING_RETRY + delta.id;
-					if (delta.canResume) {
-						//can resume, retry
-						var $retry = ls.get($key, 0);
-						if ($retry < 10) {
-							chrome.downloads.resume(delta.id, function() {
-								console.log(delta.id + ':retry time: ' + $retry);
-							});
-							$retry++;
-							ls.set($key, $retry);
-						};
-					} else {
-						//can't resume(e.g. manually abort), clear stage.
-						$ids.splice($idx, 1);
-						ls.set(DOWNLOADING_IDS, $ids);
-						ls.remove($key);
-					}
-
+				console.log('interrupted', $delta);
+				if ($delta.canResume && $delta.canResume.current) {
+					//wait for next change event to retry
+				} else {
+					//can't resume(e.g. manually abort), clear stage.
+					console.log(`${$delta.id}: can not resume. clear stage.`);
+					//Tumblr.removeDownloadQueue($delta.id);
 				}
 				break;
 			case 'in_progress':
 				break;
 			default:
-				console.log('unknown download state: ' + delta.state.current);
-		}
-	},
-	onMessage: function($request, $sender, sendResponse) {
-		switch ($request.action) {
-			case 'setTumblrVideo':
-				ls.set(LINK, $request.link);
-				sendResponse(true);
-				break;
-			case 'addDownloadQueue':
-				Tumblr.addDownloadQueue($request.link, Tumblr.options.saveAs);
-				sendResponse(true);
-				break;
+				console.log(`unknown download state: ${$delta.state.current}`);
 		}
 	},
 	addDownloadQueue: function($link, $saveAs) {
@@ -115,11 +110,57 @@ var Tumblr = {
 			url: $link,
 			'saveAs': $saveAs
 		}, function($id) {
+			if (chrome.runtime.lastError) {
+				console.log(`downloading: ${chrome.runtime.lastError.message}`);
+			}
+			if (!$id) return;
 			var $ids = ls.get(DOWNLOADING_IDS, []);
 			if ($ids.indexOf($id) >= 0) return;
 			$ids.push($id);
 			ls.set(DOWNLOADING_IDS, $ids);
 		});
+	},
+	removeDownloadQueue: function($id) {
+		var $ids = ls.get(DOWNLOADING_IDS, []),
+			$idx = $ids.indexOf($id),
+			$key = DOWNLOADING_RETRY + $id;
+		if ($idx < 0) return;
+		$ids.splice($idx, 1);
+		ls.set(DOWNLOADING_IDS, $ids);
+		ls.remove($key);
+	},
+	inDownloadQueue: function($id) {
+		var $ids = ls.get(DOWNLOADING_IDS, []),
+			$idx = $ids.indexOf($id);
+		return $idx >= 0;
+	},
+	retryDownload: function($id) {
+		var $key = DOWNLOADING_RETRY + $id;
+		//can resume, retry
+		var $retry = ls.get($key, 0);
+		if ($retry < DOWNLOADING_RETRY_TIMES) {
+			chrome.downloads.resume($id, function() {
+				if (chrome.runtime.lastError) {
+					console.log('try to resume:', chrome.runtime.lastError, chrome.runtime.lastError.message);
+					if ('Download canceled.' == chrome.runtime.lastError.message) {
+						Tumblr.removeDownloadQueue($id);
+						return;
+					}
+					if (chrome.runtime.lastError.message.match(/Download \d+ cannot be resumed/)) {
+						setTimeout(function() {
+							console.log(`Download ${$id}: retry by setTimeout`);
+							Tumblr.retryDownload($id);
+						}, 2000);
+					}
+				}
+				console.log(`Download ${$id}: retry time: ${$retry}`);
+				$retry++;
+				ls.set($key, $retry);
+			});
+		} else {
+			console.log(`Download ${$id}: retry time exceeded.`);
+			Tumblr.removeDownloadQueue($id);
+		}
 	},
 	sendMessage: function($msg) {
 		chrome.tabs.query({
@@ -147,5 +188,7 @@ Tumblr.onLoad();
 chrome.runtime.onInstalled.addListener(Tumblr.onInstalled);
 chrome.storage.onChanged.addListener(Tumblr.onOptionsChanged);
 chrome.contextMenus.onClicked.addListener(Tumblr.onClicked);
-chrome.extension.onMessage.addListener(Tumblr.onMessage);
+//ff comaptiable
+chrome.extension.onMessage ? chrome.extension.onMessage.addListener(Tumblr.onMessage) :
+	chrome.runtime.onMessage.addListener(Tumblr.onMessage);
 chrome.downloads.onChanged.addListener(Tumblr.onDownloadStateChange);

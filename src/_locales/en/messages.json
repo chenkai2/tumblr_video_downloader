@@ -4,7 +4,7 @@
 		"description": "Extension name"
 	},
 	"manifest_description": {
-		"message": "+ download to video player; + volume slider; preview supported; + right-click menu to download. v0.2.1 unmute while scrolling",
+		"message": "+ download to video player; + volume slider; preview supported; + right-click menu to download. v0.2.2 + progress scrolling",
 		"description": "Extension description"
 	},
 	"manifest_browser_action": {

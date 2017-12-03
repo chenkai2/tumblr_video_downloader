@@ -52,21 +52,21 @@ var Tumblr = {
 		}
 		//console.log(Tumblr.options, $namespace);
 	},
-	onMessage: function($request, $sender, sendResponse) {
+	onMessage: function($request, $sender, $sendResponse) {
 		//receive message from background script
 		switch ($request.action) {
 			case 'alert':
 				var $msg = $request.msg;
 				Tumblr.alert($msg);
 				console.log($msg);
-				sendResponse(true);
+				$sendResponse(true);
 				break;
 		}
 	},
 	onObserve: function($this) {
-		if ($this.className && $this.className.match('vjs-control-bar')) {
+		if ($this.classList && $this.classList.contains('vjs-control-bar')) {
 			Tumblr.DownloadInjector($this);
-			Tumblr.VolumeInjector($this);
+			Tumblr.PlayerInjector($this);
 		}
 	},
 	onLoad: function() {
@@ -81,7 +81,7 @@ var Tumblr = {
 			var $bars = document.getElementsByClassName('vjs-control-bar');
 			for (var $i = $bars.length - 1; $i >= 0; $i--) {
 				Tumblr.DownloadInjector($bars[$i]);
-				Tumblr.VolumeInjector($bars[$i]);
+				Tumblr.PlayerInjector($bars[$i]);
 			};
 		});
 	},
@@ -109,10 +109,10 @@ var Tumblr = {
 		//console.log($realSrc);
 		return $realSrc;
 	},
-	Detector: function($e) {
-		//console.log($e);
+	Detector: function($event) {
+		//console.log($event);
 		Tumblr.setLink('');
-		var $target = $e.target ? $e.target : $e.srcElement;
+		var $target = $event.target ? $event.target : $event.srcElement;
 		var $realSrc = Tumblr.Analyse($target);
 		Tumblr.setLink($realSrc);
 	},
@@ -125,26 +125,26 @@ var Tumblr = {
 		var $downloadIcon = document.createElement('div');
 		$downloadIcon.className = "icon_download";
 		$downloadIcon.addEventListener('click', function(ev) {
-			//$downloadIcon.className = "icon_dotdotdot";
 			chrome.runtime.sendMessage({
 					"action": "addDownloadQueue",
 					"link": $realSrc
 				},
-				function(response) {
-					//$downloadIcon.className = "icon_download";
-				}
+				function($response) {}
 			);
 		});
 		$downloadControl.appendChild($downloadIcon);
 		$bar.appendChild($downloadControl);
 	},
-	VolumeInjector: function($bar) {
+	PlayerInjector: function($bar) {
 		var $video = Tumblr.getVideo($bar);
 		if (!$video) return;
 		var $muteControls = $bar.getElementsByClassName('vjs-mute-control'),
 			$muteControl = $muteControls.length > 0 ? $muteControls[0] : null;
+		var $progressControls = $bar.getElementsByClassName('vjs-progress-control'),
+			$progressControl = $progressControls.length > 0 ? $progressControls[0] : null;
 		var $sliderControl = document.createElement("div"),
 			$slider = document.createElement("input");
+		var $parent = $bar.parentNode;
 		$sliderControl.className = "vjs-video-volume invisible";
 		$slider.className = "vjs-volume-slider";
 		$slider.type = "range";
@@ -158,24 +158,26 @@ var Tumblr = {
 			$video.volume = $volume;
 		}
 		$slider.volume = $video.volume;
-		$slider.addEventListener("input", function($ev) {
+		$slider.addEventListener("input", function($event) {
 			$video.volume = $slider.value;
 			ls.set('volume', $slider.value);
 		});
-		$video.addEventListener('volumechange', function($ev) {
+		$video.addEventListener('volumechange', function($event) {
 			$slider.value = $video.volume;
 			ls.set('volume', $slider.value);
 		});
-		var $toggle = function($ev) {
+		var $toggle = function($event) {
 			$sliderControl.classList.toggle('invisible');
 		}
 		$sliderControl.addEventListener('mouseenter', $toggle);
 		$sliderControl.addEventListener('mouseleave', $toggle);
-		var $changeVolume = function($wheelDeltaY) {
-			$delta = $wheelDeltaY > 0 ? 0.01 : -0.01;
+		var $changeVolume = function($event) {
+			//console.log($event);
+			$event.preventDefault();
+			$delta = $event.deltaY > 0 ? -0.01 : 0.01;
 			var $volume = $video.volume;
 			if ($volume > 0.2) $delta *= 5;
-			$volume = $volume + $delta;
+			$volume += $delta;
 			if ($volume < 0) {
 				$volume = 0;
 			} else if ($volume > 1) {
@@ -186,23 +188,39 @@ var Tumblr = {
 			}
 			$video.volume = $volume;
 		};
-		$sliderControl.addEventListener('wheel', function($ev) {
-			//console.log($ev);
-			$ev.preventDefault();
-			$changeVolume($ev.wheelDeltaY);
-		});
+		var $changeProgress = function($event) {
+			//console.log($event);
+			if (!$video.duration) {
+				return;
+			}
+			$event.preventDefault();
+			$delta = $event.deltaY > 0 ? -1 : 1;
+			var $currentTime = $video.currentTime;
+			$currentTime += $delta;
+			if ($currentTime < 0) {
+				$currentTime = 0;
+			} else if ($currentTime > $video.duration) {
+				$currentTime -= $delta;
+			}
+			var $a = setTimeout(function() {
+				clearTimeout($a);
+				$parent.classList.remove('vjs-user-inactive');
+				$parent.classList.add('vjs-user-active');
+			}, 250);
+			$video.currentTime = $currentTime;
+		};
+		$sliderControl.addEventListener('wheel', $changeVolume);
 		$sliderControl.appendChild($slider);
 		if ($muteControl) {
 			$muteControl.addEventListener('mouseenter', $toggle);
 			$muteControl.addEventListener('mouseleave', $toggle);
-			$muteControl.addEventListener('wheel', function($ev) {
-				//console.log($ev);
-				$ev.preventDefault();
-				$changeVolume($ev.wheelDeltaY);
-			});
+			$muteControl.addEventListener('wheel', $changeVolume);
+		}
+		if ($progressControl) {
+			$progressControl.addEventListener('wheel', $changeProgress);
 		}
 		$bar.appendChild($sliderControl);
-		$bar.parentNode.addEventListener('mouseenter', function($ev) {
+		$parent.addEventListener('mouseenter', function($event) {
 			if (Tumblr.options.globalVolume) {
 				$video.volume = ls.get('volume', 0.4);
 			}

@@ -4,7 +4,7 @@
 		"description": "擴充功能名稱"
 	},
 	"manifest_description": {
-		"message": "給視頻增加下載按鈕、音量控制，支持視頻預覽；在右鍵菜單添加“下載Tumblr視頻”菜單. v0.2.1: 滾輪解除靜音",
+		"message": "給視頻增加下載按鈕、音量控制，支持視頻預覽；在右鍵菜單添加“下載Tumblr視頻”菜單. v0.2.2: 滾輪控制視頻進度",
 		"description": "擴充功能描述"
 	},
 	"manifest_browser_action": {

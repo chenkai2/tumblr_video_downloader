@@ -30,6 +30,10 @@ textarea {
 
 .vjs-volume-slider {
     -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    -o-appearance: none;
+    appearance: none;
 
     -webkit-transform: rotate(-90deg);
     transform: rotate(-90deg);
@@ -63,6 +67,11 @@ textarea {
 
 input[type=range].vjs-volume-slider::-webkit-slider-thumb {
     -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    -o-appearance: none;
+    appearance: none;
+
     width: 10px;
     height: 10px;
     -webkit-border-radius: 10px;
@@ -74,9 +83,14 @@ input[type=range].vjs-volume-slider::-webkit-slider-thumb {
 }
 
 input[type='range'].vjs-volume-slider::-webkit-slider-runnable-track {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    -ms-appearance: none;
+    -o-appearance: none;
+    appearance: none;
+
     color: #FFFFFF;
     height: 2px;
     margin-top: 0px;
-    -webkit-appearance: none;
     border: 1px solid #FFF;
 }

@@ -2,7 +2,7 @@
 	"manifest_version": 2,
 	"name": "__MSG_manifest_name__",
 	"short_name": "tumblr video player",
-	"version": "0.2.1",
+	"version": "0.2.2",
 	"default_locale": "en",
 	"description": "__MSG_manifest_description__",
 	"icons": {
@@ -11,14 +11,13 @@
 	"author": "orochi",
 	"homepage_url": "https://chrome.google.com/webstore/detail/tumblr-video-downloader-a/mhnbncgedmceiijmnljpeenacdcaompa",
 	"permissions": [
-		"http://*.tumblr.com/",
-		"https://*.tumblr.com/",
+		"*://*.tumblr.com/*",
 		"storage",
 		"downloads",
 		"contextMenus"
 	],
 	"content_scripts": [{
-		"matches": ["http://*.tumblr.com/*", "https://*.tumblr.com/*"],
+		"matches": ["*://*.tumblr.com/*"],
 		"run_at": "document_idle",
 		"js": ["storage.js", "tumblr.js"],
 		"css": ["tumblr.css", "volume.css"],
@@ -29,6 +28,9 @@
 	},
 	"browser_action": {
 		"browser_style": false,
+		"default_icon": {
+			"32": "icon_128.png"
+		},
 		"default_popup": "options.html",
 		"default_title": "__MSG_manifest_browser_action__"
 	}
