@@ -18,17 +18,7 @@ var Tumblr = {
 		saveAs: true,
 		globalVolume: true
 	},
-	onInstalled: function() {
-		// When the app gets installed, set up the context menus
-		var $menuCreated = chrome.contextMenus.create({
-			id: MENU_ID,
-			title: i18n("menu_download"),
-			documentUrlPatterns: ["*://*.tumblr.com/*"],
-			contexts: [
-				"all"
-			]
-		});
-	},
+	onInstalled: function() {},
 	onLoad: function() {
 		options.get({
 			'saveAs': Tumblr.options.saveAs,
@@ -38,6 +28,15 @@ var Tumblr = {
 				Tumblr.options[$i] = $options[$i];
 			}
 			//console.log('onload', Tumblr.options);
+			// When the background gets started, set up the context menus
+			var $menuCreated = chrome.contextMenus.create({
+				id: MENU_ID,
+				title: i18n("menu_download"),
+				documentUrlPatterns: ["*://*.tumblr.com/*"],
+				contexts: [
+					"all"
+				]
+			});
 		});
 	},
 	onMessage: function($request, $sender, $sendResponse) {
