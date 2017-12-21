@@ -8,6 +8,9 @@ Chrome上的Tumblr视频下载扩展，提供右键菜单下载tumblr视频,支�
 ## Chrome Store (Chrome应用商店)
 https://chrome.google.com/webstore/detail/mhnbncgedmceiijmnljpeenacdcaompa
 
+## Firefox Add-On (Firefox附加组件)
+https://addons.mozilla.org/zh-CN/firefox/addon/tumblr-video-downloader-a
+
 ## Features:
     1. Right-click to download Tumblr video you wish to.
     2. Auto retry when it interrupted due to terrible network condition.
@@ -29,6 +32,10 @@ https://chrome.google.com/webstore/detail/mhnbncgedmceiijmnljpeenacdcaompa
     7. 在*.tumblr.com域名下生效，可以是dashboard、个人页、发现页，任君选择。
     8. 只支持Tumblr原生视频，不支持instagram、youtube、vimeo。
     9. 和其他会修改默认播放器的扩展不兼容，比如“Better Tumblr Video”。
+
+## v 0.2.3
+fix a issue that some user don't have right-click menu.
+the reason is menu binding is onInstalled, not onLoad.
 
 ## v 0.2.2
 + progress bar scrolling control.
