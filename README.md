@@ -33,6 +33,11 @@ https://addons.mozilla.org/zh-CN/firefox/addon/tumblr-video-downloader-a
     8. 只支持Tumblr原生视频，不支持instagram、youtube、vimeo。
     9. 和其他会修改默认播放器的扩展不兼容，比如“Better Tumblr Video”。
 
+## v 0.2.4
+reverse scroll direction of video progress bar.
+scroll down to fast-forward.
+scroll up to rewind.
+
 ## v 0.2.3
 fix a issue that some user don't have right-click menu.
 the reason is menu binding is onInstalled, not onLoad.

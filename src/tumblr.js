@@ -194,7 +194,7 @@ var Tumblr = {
 				return;
 			}
 			$event.preventDefault();
-			$delta = $event.deltaY > 0 ? -1 : 1;
+			$delta = $event.deltaY > 0 ? 1 : -1;
 			var $currentTime = $video.currentTime;
 			$currentTime += $delta;
 			if ($currentTime < 0) {
