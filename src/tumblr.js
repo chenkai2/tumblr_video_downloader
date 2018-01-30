@@ -104,11 +104,11 @@ var Tumblr = {
 			Tumblr.options = $options;
 			//console.log(Tumblr.options);
 			//injector
-			/*var $bars = document.getElementsByClassName('vjs-control-bar');
+			var $bars = document.getElementsByClassName('vjs-control-bar');
 			for (var $i = $bars.length - 1; $i >= 0; $i--) {
 				Tumblr.DownloadInjector($bars[$i]);
 				Tumblr.PlayerInjector($bars[$i]);
-			};*/
+			};
 		});
 	},
 	getVideo: function($target) {
