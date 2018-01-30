@@ -4,7 +4,17 @@
  * @date    2017-11-28 02:35:05
  * @version $Id$
  */
-
+var EVENTS = {
+		onCompleted: [],
+		onStarted: [],
+		onAborted: []
+	},
+	EVENT_SEQ = 1,
+	DOWNLOAD_STATUSES = [],
+	STATUS_INIT = 0,
+	STATUS_DOWNLOADING = 1,
+	STATUS_ABORTED = 2,
+	STATUS_COMPLETED = 3;
 var Tumblr = {
 	options: {
 		saveAs: true,
@@ -16,8 +26,8 @@ var Tumblr = {
 				"action": "setTumblrVideo",
 				"link": $srcLink
 			},
-			function(response) {
-				//console.log(response);
+			function($response) {
+				//console.log($response);
 			}
 		);
 	},
@@ -61,6 +71,22 @@ var Tumblr = {
 				console.log($msg);
 				$sendResponse(true);
 				break;
+			case 'start':
+				//download start actions here
+				$event = EVENTS.onStarted[$request.id];
+				$event();
+				break;
+			case 'abort':
+				//download abort actions here
+				$event = EVENTS.onAborted[$request.id];
+				$event();
+				break;
+			case 'complete':
+				//download complete actions here
+				$event = EVENTS.onCompleted[$request.id];
+				$event();
+				break;
+
 		}
 	},
 	onObserve: function($this) {
@@ -78,11 +104,11 @@ var Tumblr = {
 			Tumblr.options = $options;
 			//console.log(Tumblr.options);
 			//injector
-			var $bars = document.getElementsByClassName('vjs-control-bar');
+			/*var $bars = document.getElementsByClassName('vjs-control-bar');
 			for (var $i = $bars.length - 1; $i >= 0; $i--) {
 				Tumblr.DownloadInjector($bars[$i]);
 				Tumblr.PlayerInjector($bars[$i]);
-			};
+			};*/
 		});
 	},
 	getVideo: function($target) {
@@ -124,13 +150,38 @@ var Tumblr = {
 		$downloadControl.title = "Download";
 		var $downloadIcon = document.createElement('div');
 		$downloadIcon.className = "icon_download";
-		$downloadIcon.addEventListener('click', function(ev) {
+		$downloadIcon.addEventListener('click', function($ev) {
+			$downloadIcon.className = 'icon_dotdotdot';
+			$event_seq = EVENT_SEQ;
 			chrome.runtime.sendMessage({
 					"action": "addDownloadQueue",
-					"link": $realSrc
+					"link": $realSrc,
+					"id": $event_seq
 				},
 				function($response) {}
 			);
+			DOWNLOAD_STATUSES[$event_seq] = STATUS_INIT;
+			EVENTS.onStarted[$event_seq] = function() {
+				$downloadIcon.className = 'icon_checkmark';
+				DOWNLOAD_STATUSES[$event_seq] = STATUS_DOWNLOADING;
+				setTimeout(function() {
+					var $status = DOWNLOAD_STATUSES[$event_seq],
+						$className = STATUS_COMPLETED == $status || STATUS_ABORTED == $status ? 'icon_download' : 'icon_dotdotdot';
+					$downloadIcon.className = $className;
+				}, 2000);
+			}
+			EVENTS.onAborted[$event_seq] = function() {
+				$downloadIcon.className = 'icon_close';
+				DOWNLOAD_STATUSES[$event_seq] = STATUS_ABORTED;
+				setTimeout(function() {
+					$downloadIcon.className = 'icon_download';
+				}, 2000);
+			}
+			EVENTS.onCompleted[$event_seq] = function() {
+				$downloadIcon.className = 'icon_download';
+				DOWNLOAD_STATUSES[$event_seq] = STATUS_COMPLETED;
+			}
+			EVENT_SEQ++;
 		});
 		$downloadControl.appendChild($downloadIcon);
 		$bar.appendChild($downloadControl);

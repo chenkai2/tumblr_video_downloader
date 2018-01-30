@@ -10,6 +10,7 @@ var MENU_ID = 'tumblr downloader',
 	DOWNLOADING_IDS = 'downloading_ids',
 	DOWNLOADING_RETRY = 'downloading_retry_',
 	DOWNLOADING_RETRY_TIMES = 10,
+	EVENT_IDS = {},
 	i18n = function($var, $options) {
 		return chrome.i18n.getMessage($var, $options);
 	};
@@ -46,8 +47,8 @@ var Tumblr = {
 				$sendResponse(true);
 				break;
 			case 'addDownloadQueue':
-				Tumblr.addDownloadQueue($request.link, Tumblr.options.saveAs);
-				$sendResponse(true);
+				var $id = Tumblr.addDownloadQueue($request.link, Tumblr.options.saveAs, $request.id);
+				$sendResponse();
 				break;
 		}
 	},
@@ -80,6 +81,7 @@ var Tumblr = {
 				//user cancel, user shutdown
 				console.log('user abort');
 				Tumblr.removeDownloadQueue($delta.id);
+				Tumblr.downloadAction('abort', $delta.id);
 				return;
 			}
 		}
@@ -87,6 +89,7 @@ var Tumblr = {
 		switch ($delta.state.current) {
 			case 'complete':
 				Tumblr.removeDownloadQueue($delta.id);
+				Tumblr.downloadAction('complete', $delta.id);
 				break;
 			case 'interrupted':
 				console.log('interrupted', $delta);
@@ -96,15 +99,19 @@ var Tumblr = {
 					//can't resume(e.g. manually abort), clear stage.
 					console.log(`${$delta.id}: can not resume. clear stage.`);
 					//Tumblr.removeDownloadQueue($delta.id);
+					Tumblr.downloadAction('abort', $delta.id);
 				}
 				break;
 			case 'in_progress':
+				//this section turned out to be never triggered.
+				console.log('in_progress');
+				//Tumblr.downloadAction('in_progress', $delta.id);
 				break;
 			default:
 				console.log(`unknown download state: ${$delta.state.current}`);
 		}
 	},
-	addDownloadQueue: function($link, $saveAs) {
+	addDownloadQueue: function($link, $saveAs, $event_id) {
 		chrome.downloads.download({
 			url: $link,
 			'saveAs': $saveAs
@@ -117,6 +124,8 @@ var Tumblr = {
 			if ($ids.indexOf($id) >= 0) return;
 			$ids.push($id);
 			ls.set(DOWNLOADING_IDS, $ids);
+			EVENT_IDS[$id] = $event_id;
+			Tumblr.downloadAction('start', $id);
 		});
 	},
 	removeDownloadQueue: function($id) {
@@ -143,6 +152,7 @@ var Tumblr = {
 					console.log('try to resume:', chrome.runtime.lastError, chrome.runtime.lastError.message);
 					if ('Download canceled.' == chrome.runtime.lastError.message) {
 						Tumblr.removeDownloadQueue($id);
+						Tumblr.downloadAction('abort', $id);
 						return;
 					}
 					if (chrome.runtime.lastError.message.match(/Download \d+ cannot be resumed/)) {
@@ -159,6 +169,7 @@ var Tumblr = {
 		} else {
 			console.log(`Download ${$id}: retry time exceeded.`);
 			Tumblr.removeDownloadQueue($id);
+			Tumblr.downloadAction('abort', $id);
 		}
 	},
 	sendMessage: function($msg) {
@@ -179,6 +190,15 @@ var Tumblr = {
 		Tumblr.sendMessage({
 			action: "alert",
 			msg: $msg
+		});
+	},
+	downloadAction: function($action, $id) {
+		if (typeof EVENT_IDS[$id] == 'undefined') {
+			return;
+		}
+		Tumblr.sendMessage({
+			action: $action,
+			id: EVENT_IDS[$id]
 		});
 	}
 };
