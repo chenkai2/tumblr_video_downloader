@@ -537,3 +537,7 @@ body {
 .crt-skin-default .vjs-duration {
     right: 120px !important;
 }
+
+.td-timestamp {
+	margin-left: 10px;
+}

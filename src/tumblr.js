@@ -90,9 +90,13 @@ var Tumblr = {
 		}
 	},
 	onObserve: function($this) {
-		if ($this.classList && $this.classList.contains('vjs-control-bar')) {
-			Tumblr.DownloadInjector($this);
-			Tumblr.PlayerInjector($this);
+		if ($this.classList) {
+			if ($this.classList.contains('vjs-control-bar')) {
+				Tumblr.DownloadInjector($this);
+				Tumblr.PlayerInjector($this);
+			} else if ($this.classList.contains('post_container') || $this.classList.contains('post')) {
+				Tumblr.TimestampInjector($this);
+			}
 		}
 	},
 	onLoad: function() {
@@ -105,10 +109,15 @@ var Tumblr = {
 			//console.log(Tumblr.options);
 			//injector
 			var $bars = document.getElementsByClassName('vjs-control-bar');
-			for (var $i = $bars.length - 1; $i >= 0; $i--) {
+			for (var $i = 0; $i < $bars.length; $i++) {
 				Tumblr.DownloadInjector($bars[$i]);
 				Tumblr.PlayerInjector($bars[$i]);
-			};
+			}
+			//timestamp injector
+			var $posts = document.getElementsByClassName('post');
+			for (var $i = 0; $i < $posts.length; $i++) {
+				Tumblr.TimestampInjector($posts[$i]);
+			}
 		});
 	},
 	getVideo: function($target) {
@@ -143,6 +152,8 @@ var Tumblr = {
 		Tumblr.setLink($realSrc);
 	},
 	DownloadInjector: function($bar) {
+		var $controls = $bar.getElementsByClassName('vjs-download-control');
+		if ($controls.length > 0) return;
 		var $realSrc = Tumblr.Analyse($bar);
 		if (!$realSrc) return;
 		var $downloadControl = document.createElement('div');
@@ -187,6 +198,8 @@ var Tumblr = {
 		$bar.appendChild($downloadControl);
 	},
 	PlayerInjector: function($bar) {
+		var $controls = $bar.getElementsByClassName('vjs-video-volume');
+		if ($controls.length > 0) return;
 		var $video = Tumblr.getVideo($bar);
 		if (!$video) return;
 		var $muteControls = $bar.getElementsByClassName('vjs-mute-control'),
@@ -276,6 +289,25 @@ var Tumblr = {
 				$video.volume = ls.get('volume', 0.4);
 			}
 		});
+	},
+	TimestampInjector: function($post) {
+		var $permaLinks = $post.getElementsByClassName('post_permalink');
+		if ($permaLinks.length == 0) return;
+		var $permaLink = $permaLinks[0];
+		var $title = $permaLink.title.replace(/.+ - (.+)$/, '$1');;
+		var $postHeaders = $post.getElementsByClassName('post_header');
+		if ($postHeaders.length == 0) return;
+		var $postHeader = $postHeaders[0];
+		var $spans = $postHeader.getElementsByClassName('td-timestamp'),
+			$span;
+		if ($spans.length == 0) {
+			$span = document.createElement('span');
+			$span.className = 'td-timestamp';
+			$postHeader.appendChild($span);
+		} else {
+			$span = $spans[0];
+		}
+		$span.innerText = $title;
 	}
 }
 var observer = new MutationObserver(function(mutations) {

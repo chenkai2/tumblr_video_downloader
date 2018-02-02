@@ -1,9 +1,11 @@
 # tumblr video downloader / enhancer
 Chrome extension for tumblr, add right-click menu to download tumblr video in dashboard, profile, explore and so on.
 add download button to video player; add volume slider; preview supported; add right-click menu to download tumblr videos.
+show post timestamp in dashboard.
 
 Chrome上的Tumblr视频下载扩展，提供右键菜单下载tumblr视频,支持dashboard、个人主页、发现页等各种页面。
 给视频增加下载按钮、音量控制，支持视频预览，在右键菜单添加“下载Tumblr视频”菜单。
+在dashboard显示帖子时间。
 
 ## Chrome Store (Chrome应用商店)
 https://chrome.google.com/webstore/detail/mhnbncgedmceiijmnljpeenacdcaompa
@@ -32,6 +34,9 @@ https://addons.mozilla.org/zh-CN/firefox/addon/tumblr-video-downloader-a
     7. 在*.tumblr.com域名下生效，可以是dashboard、个人页、发现页，任君选择。
     8. 只支持Tumblr原生视频，不支持instagram、youtube、vimeo。
     9. 和其他会修改默认播放器的扩展不兼容，比如“Better Tumblr Video”。
+
+## v 0.2.7
+show post timestamp in dashboard.
 
 ## v 0.2.6
 fix a issue.

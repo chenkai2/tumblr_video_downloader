@@ -4,7 +4,7 @@
 		"description": "扩展名"
 	},
 	"manifest_description": {
-		"message": "给视频增加下载按钮、音量控制，支持视频预览，在右键菜单添加“下载Tumblr视频”菜单. v0.2.5：修正一个bug",
+		"message": "给视频增加下载按钮、音量控制，支持视频预览，在右键菜单添加“下载Tumblr视频”菜单. v0.2.7：在dashboard显示帖子时间",
 		"description": "扩展描述"
 	},
 	"manifest_browser_action": {
