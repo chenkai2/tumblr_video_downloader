@@ -18,22 +18,22 @@ https://chrome.google.com/webstore/detail/mhnbncgedmceiijmnljpeenacdcaompa
 https://addons.mozilla.org/zh-CN/firefox/addon/tumblr-video-downloader-a
 
 ## Usage:
-1. open https://www.tumblr.com/dashboard
-2. scoll to a video post.
-3. right-click video to download / click download icon in the bottom right to download
-4. scroll progress bar to fast-forward, scroll volume bar to control video volume
-or
-1. open https://www.tumblr.com/explore/video
-2. scroll to a native video (not youtube, vimeo etc.)
-3. click the video to activated it.
-4. right-click video to download / click download icon in the bottom right to download
+    1. open https://www.tumblr.com/dashboard
+    2. scoll to a video post.
+    3. right-click video to download / click download icon in the bottom right to download
+    4. scroll progress bar to fast-forward, scroll volume bar to control video volume
+## or
+    1. open https://www.tumblr.com/explore/video
+    2. scroll to a native video (not youtube, vimeo etc.)
+    3. click the video to activated it.
+    4. right-click video to download / click download icon in the bottom right to download
 
 ## 使用方法:
     1. 打开 https://www.tumblr.com/dashboard
     2. 滚动到视频帖子.
     3. 右击视频下载 / 点击右下角下载按钮下载
     4. 支持滚动控制视频进度，滚动控制视频音量
-或者
+## 或者
     1. 打开 https://www.tumblr.com/explore/video
     2. 滚动到原生视频帖子 (不是youtube, vimeo等视频)
     3. 点击视频激活它.
