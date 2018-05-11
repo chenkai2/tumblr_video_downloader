@@ -1,8 +1,11 @@
 # tumblr video downloader / enhancer
+Disclaimer: THIS IS NOT AN OFFICIAL TUMBLR APP!
+
 Chrome extension for tumblr, add right-click menu to download tumblr video in dashboard, profile, explore and so on.
 add download button to video player; add volume slider; preview supported; add right-click menu to download tumblr videos.
 show post timestamp in dashboard.
 
+声明：本扩展并非Tumblr官方扩展/应用。
 Chrome上的Tumblr视频下载扩展，提供右键菜单下载tumblr视频,支持dashboard、个人主页、发现页等各种页面。
 给视频增加下载按钮、音量控制，支持视频预览，在右键菜单添加“下载Tumblr视频”菜单。
 在dashboard显示帖子时间。
@@ -12,6 +15,29 @@ https://chrome.google.com/webstore/detail/mhnbncgedmceiijmnljpeenacdcaompa
 
 ## Firefox Add-On (Firefox附加组件)
 https://addons.mozilla.org/zh-CN/firefox/addon/tumblr-video-downloader-a
+
+##Usage:
+1. open https://www.tumblr.com/dashboard
+2. scoll to a video post.
+3. right-click video to download / click download icon in the bottom right to download
+4. scroll progress bar to fast-forward, scroll volume bar to control video volume
+or
+1. open https://www.tumblr.com/explore/video
+2. scroll to a native video (not youtube, vimeo etc.)
+3. click the video to activated it.
+4. right-click video to download / click download icon in the bottom right to download
+
+##使用方法:
+1. 打开 https://www.tumblr.com/dashboard
+2. 滚动到视频帖子.
+3. 右击视频下载 / 点击右下角下载按钮下载
+4. 支持滚动控制视频进度，滚动控制视频音量
+或者
+1. 打开 https://www.tumblr.com/explore/video
+2. 滚动到原生视频帖子 (不是youtube, vimeo等视频)
+3. 点击视频激活它.
+4. 右击视频下载 / 点击右下角下载按钮下载
+
 
 ## Features:
     1. Right-click to download Tumblr video you wish to.

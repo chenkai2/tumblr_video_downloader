@@ -4,15 +4,15 @@
 		"description": "Extension name"
 	},
 	"manifest_description": {
-		"message": "+ download to video player; + volume slider; preview supported; + right-click to download. v0.2.7 show post timestamp in dashboard",
+		"message": "+ download to video player; + volume slider; preview supported; Disclaimer: This is not an official Tumblr app.",
 		"description": "Extension description"
 	},
 	"manifest_browser_action": {
-		"message": "tumblr video player options",
+		"message": "tblr video player options",
 		"description": "browser action title"
 	},
 	"menu_download": {
-		"message": "Download Tumblr Video",
+		"message": "Download Video",
 		"description": "Menu item label."
 	},
 	"options_setting": {

@@ -1,18 +1,18 @@
 {
 	"manifest_name": {
-		"message": "tumblr视频下载及增强",
+		"message": "汤不热视频增强",
 		"description": "扩展名"
 	},
 	"manifest_description": {
-		"message": "给视频增加下载按钮、音量控制，支持视频预览，在右键菜单添加“下载Tumblr视频”菜单. v0.2.7：在dashboard显示帖子时间",
+		"message": "给视频增加下载按钮、音量控制，支持视频预览，在右键菜单添加“下载汤不热视频”菜单。声明：此扩展并非Tumblr官方应用。",
 		"description": "扩展描述"
 	},
 	"manifest_browser_action": {
-		"message": "tumblr视频播放设置",
+		"message": "汤不热视频播放设置",
 		"description": "browser action title"
 	},
 	"menu_download": {
-		"message": "下载Tumblr视频",
+		"message": "下载汤不热视频",
 		"description": "右键菜单标签名."
 	},
 	"options_setting": {

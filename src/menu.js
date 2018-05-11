@@ -193,6 +193,7 @@ var Tumblr = {
 		});
 	},
 	downloadAction: function($action, $id) {
+		console.log($action);
 		if (typeof EVENT_IDS[$id] == 'undefined') {
 			return;
 		}

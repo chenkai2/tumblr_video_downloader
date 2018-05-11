@@ -1,6 +1,6 @@
 /**
  * storage
- * @authors 陈凯 (chenkai2@staff.weibo.com)
+ * @authors orochi114 (orochi114@126.com)
  * @date    2017-11-28
  * @version $Id$
  */

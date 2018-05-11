@@ -1,15 +1,15 @@
 {
 	"manifest_version": 2,
 	"name": "__MSG_manifest_name__",
-	"short_name": "tumblr video player",
-	"version": "0.2.7",
+	"short_name": "tblr video enhancer",
+	"version": "0.2.8",
 	"default_locale": "en",
 	"description": "__MSG_manifest_description__",
 	"icons": {
 		"128": "icon_128.png"
 	},
 	"author": "orochi",
-	"homepage_url": "https://chrome.google.com/webstore/detail/tumblr-video-downloader-a/mhnbncgedmceiijmnljpeenacdcaompa",
+	"homepage_url": "https://github.com/chenkai2/tumblr_video_downloader",
 	"permissions": [
 		"*://*.tumblr.com/*",
 		"storage",
@@ -23,6 +23,9 @@
 		"css": ["tumblr.css", "volume.css"],
 		"all_frames": true
 	}],
+	"web_accessible_resources": [
+		"*.png"
+	],
 	"background": {
 		"scripts": ["storage.js", "menu.js"]
 	},

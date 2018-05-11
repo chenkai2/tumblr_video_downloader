@@ -469,11 +469,14 @@ body {
     box-shadow: none
 }
 
+
 /**
  * make my own download icon use tumblr resource
  */
 
-.icon_download:before,.icon_checkmark:before,.icon_close:before {
+.icon_download:before,
+.icon_checkmark:before,
+.icon_close:before {
     font-family: tumblr-icons, Blank;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -495,22 +498,27 @@ body {
 }
 
 .icon_download:before {
-    content: "\EA39";
-    -moz-transform: scaleY(-1);
-    -webkit-transform: scaleY(-1);
-    -o-transform: scaleY(-1);
-    transform: scaleY(-1);
-    filter: flipv;
+    content: "&nbsp;";
 }
 
 .icon_download {
-    margin-top: -2px;
-    margin-left: 10px;
+    margin-top: 5px;
+    margin-left: 4px;
+    background-image: url("chrome-extension://__MSG_@@extension_id__/icon_128.png");
+    background-size: 20px;
+    background-repeat: no-repeat;
+}
+
+@-moz-document url-prefix() {
+    .icon_download {
+        background-image: url("moz-extension://__MSG_@@extension_id__/icon_128.png");
+    }
 }
 
 .icon_download:hover {
     color: #f22e2e;
 }
+
 
 /**
  * move default controls left and insert download control on the right
@@ -539,5 +547,5 @@ body {
 }
 
 .td-timestamp {
-	margin-left: 10px;
+    margin-left: 10px;
 }

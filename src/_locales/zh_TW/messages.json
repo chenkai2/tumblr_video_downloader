@@ -1,18 +1,18 @@
 {
 	"manifest_name": {
-		"message": "tumblr視頻下载及增强",
+		"message": "湯不熱視頻增强",
 		"description": "擴充功能名稱"
 	},
 	"manifest_description": {
-		"message": "給視頻增加下載按鈕、音量控制，支持視頻預覽；在右鍵菜單添加“下載Tumblr視頻”菜單. v0.2.7：在dashboard顯示帖子時間",
+		"message": "給視頻增加下載按鈕、音量控制，支持視頻預覽；在右鍵菜單添加“下載湯不熱視頻”菜單。聲明：此擴展并非Tumblr官方應用。",
 		"description": "擴充功能描述"
 	},
 	"manifest_browser_action": {
-		"message": "tumblr視頻播放設置",
+		"message": "湯不熱視頻播放設置",
 		"description": "browser action title"
 	},
 	"menu_download": {
-		"message": "下載Tumblr視頻",
+		"message": "下載湯不熱視頻",
 		"description": "右鍵菜單標簽名"
 	},
 	"options_setting": {
